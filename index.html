@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Air Spyka - Agendamento de Passagens</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Air Spyka</h1>
+  </header>
+
+  <main>
+    <section id="booking">
+      <h2>Agendar Passagem</h2>
+      <form id="bookingForm">
+        <label>Rota:
+          <select id="routeSelect"></select>
+        </label>
+        <label>Moeda:
+          <select id="currency">
+            <option value="mango">Mango Spykano</option>
+            <option value="usd">Dólar</option>
+            <option value="brl">Real</option>
+          </select>
+        </label>
+        <button type="submit">Agendar</button>
+      </form>
+      <div id="ticket"></div>
+    </section>
+
+    <section id="admin">
+      <h2>Administração</h2>
+
+      <h3>Cadastrar Rota</h3>
+      <form id="routeForm">
+        <input type="text" id="routeName" placeholder="Origem - Destino" required>
+        <input type="number" id="routePrice" placeholder="Preço (em Mango)" required>
+        <select id="aircraftType"></select>
+        <button type="submit">Cadastrar Rota</button>
+      </form>
+
+      <h3>Cadastrar Aeronave</h3>
+      <form id="aircraftForm">
+        <input type="text" id="aircraftName" placeholder="Nome da Aeronave" required>
+        <button type="submit">Cadastrar Aeronave</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
