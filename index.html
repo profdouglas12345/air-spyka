@@ -1,41 +1,40 @@
+
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <title>Air Spyka - Simulador</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-  <script src="app.js" defer></script>
+  <meta charset="UTF-8">
+  <title>Gerador de Certificados</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header>
-    <h1>✈️ Air Spyka</h1>
-    <p>Explore o Caribe com estilo e conforto</p>
-  </header>
-  <main>
-    <h2>Simulador de Passagens</h2>
-    <label for="currency">Moeda:</label>
-    <select id="currency">
-      <option value="mango">Mango Spykano</option>
-      <option value="usd">Dólar</option>
-      <option value="brl">Real</option>
-    </select>
-    <table id="routesTable">
-      <thead>
-        <tr>
-          <th>Origem</th>
-          <th>Destino</th>
-          <th>Distância</th>
-          <th>Duração</th>
-          <th>Preço</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </main>
-  <footer>
-    <p>&copy; 2025 Air Spyka</p>
-  </footer>
+  <div class="container">
+    <h1>Gerador de Certificados</h1>
+    <form id="certForm">
+      <label>Curso:</label>
+      <input type="text" id="curso" required>
+
+      <label>Ministrado por:</label>
+      <input type="text" id="instrutor" required>
+
+      <label>Carga Horária:</label>
+      <input type="text" id="cargaHoraria" required>
+
+      <label>Ementa do Curso:</label>
+      <textarea id="ementa" rows="4" required></textarea>
+
+      <label>Lista de Alunos (um por linha):</label>
+      <textarea id="alunos" rows="6" required></textarea>
+
+      <button type="submit">Gerar Certificados</button>
+    </form>
+    <div id="mensagem"></div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
