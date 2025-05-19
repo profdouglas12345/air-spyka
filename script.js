@@ -1,60 +1,50 @@
-
-document.getElementById("certForm").addEventListener("submit", async function (e) {
+document.getElementById("certForm").addEventListener("submit", function (e) {
   e.preventDefault();
 
   const curso = document.getElementById("curso").value;
-  const instrutor = document.getElementById("instrutor").value;
+  const ministradoPor = document.getElementById("ministradoPor").value;
   const cargaHoraria = document.getElementById("cargaHoraria").value;
   const ementa = document.getElementById("ementa").value;
   const alunosTexto = document.getElementById("alunos").value;
-  const alunos = alunosTexto.split('\n').map(nome => nome.trim()).filter(nome => nome !== '');
 
-  try {
-    const batch = db.batch();
+  const alunos = alunosTexto.split("\n").filter((nome) => nome.trim() !== "");
 
-    for (const aluno of alunos) {
-      const docRef = db.collection("certificados").doc();
-      const dados = {
-        aluno,
-        curso,
-        instrutor,
-        cargaHoraria,
-        ementa,
-        dataGeracao: new Date()
-      };
-      batch.set(docRef, dados);
-
-      const pdfBlob = await gerarCertificadoPDF(aluno, curso, instrutor, cargaHoraria, ementa);
-      const storageRef = storage.ref(`certificados/${aluno.replace(/\s+/g, "_")}.pdf`);
-      await storageRef.put(pdfBlob);
-    }
-
-    await batch.commit();
-    document.getElementById("mensagem").textContent = "Certificados gerados, salvos e enviados com sucesso!";
-    document.getElementById("certForm").reset();
-  } catch (error) {
-    console.error("Erro:", error);
-    document.getElementById("mensagem").textContent = "Erro ao gerar certificados.";
+  if (alunos.length === 0) {
+    alert("Adicione pelo menos um aluno.");
+    return;
   }
+
+  alunos.forEach((aluno) => {
+    gerarCertificadoPDF(aluno.trim(), curso, ministradoPor, cargaHoraria, ementa);
+  });
+
+  alert("Certificados gerados e iniciando download para cada aluno.");
 });
 
-async function gerarCertificadoPDF(aluno, curso, instrutor, cargaHoraria, ementa) {
-  const { jsPDF } = window.jspdf;
+function gerarCertificadoPDF(nomeAluno, curso, ministradoPor, cargaHoraria, ementa) {
   const doc = new jsPDF();
 
-  doc.setFontSize(18);
+  doc.setFont("Helvetica", "bold");
+  doc.setFontSize(22);
   doc.text("CERTIFICADO", 105, 30, null, null, "center");
 
+  doc.setFontSize(14);
+  doc.setFont("Helvetica", "normal");
+  doc.text(
+    `Certificamos que ${nomeAluno} participou do curso "${curso}",`,
+    20,
+    50
+  );
+  doc.text(`ministrado por ${ministradoPor}, com carga horária de ${cargaHoraria}.`, 20, 60);
+  
+  doc.text("Ementa do curso:", 20, 80);
   doc.setFontSize(12);
-  const texto = `Certificamos que ${aluno} participou do curso "${curso}", ministrado por ${instrutor}, com carga horária total de ${cargaHoraria}.`;
-  doc.text(texto, 20, 50, { maxWidth: 170, align: 'justify' });
-
-  doc.text("Ementa do Curso:", 20, 80);
-  doc.setFontSize(11);
-  doc.text(ementa, 20, 90, { maxWidth: 170, align: 'justify' });
+  const ementaLinhas = doc.splitTextToSize(ementa, 170);
+  doc.text(ementaLinhas, 20, 90);
 
   doc.setFontSize(10);
-  doc.text(`Emitido em: ${new Date().toLocaleDateString()}`, 20, 270);
+  doc.text("Emitido automaticamente por CertificaAluno", 105, 280, null, null, "center");
 
-  return doc.output("blob");
+  const nomeArquivo = `Certificado_${nomeAluno.replace(/ /g, "_")}.pdf`;
+  doc.save(nomeArquivo);
 }
